@@ -41,6 +41,8 @@ function factCategoryLabel(fact) {
   if (fact.id.startsWith("lm-")) return "Landmarks";
   if (fact.id.startsWith("fest-")) return "Festivals";
   if (fact.id.startsWith("lang-")) return "Language";
+  if (fact.id.startsWith("attr-")) return "Tourist Spots";
+  if (fact.id.startsWith("act-")) return "Activities";
   if (fact.id.startsWith("tv-")) return "Trivia";
   return "General";
 }

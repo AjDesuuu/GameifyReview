@@ -1,14 +1,15 @@
 # PCTG Quiz Quest
 
-A static, gamified quiz for reviewing the PCTG reviewer material (Region 2: Cagayan Valley &
-Region 3: Central Luzon — provinces, capitals, landmarks, festivals, languages, trivia).
+A static, gamified quiz for reviewing the PCTG reviewer material (Region 1: Ilocos Region,
+Region 2: Cagayan Valley & Region 3: Central Luzon — provinces, capitals, landmarks, tourist
+spots, activities, festivals, languages, trivia).
 
 No backend/database — everything (questions + game logic) runs client-side in plain
 HTML/CSS/JS, so it deploys as a static site.
 
 ## How it works
 
-- **Question bank**: [data.js](data.js) holds ~90 facts pulled from the reviewer, each with
+- **Question bank**: [data.js](data.js) holds ~150 facts pulled from the reviewer, each with
   a `pre`/`answer`/`post` shape so the engine can turn one fact into three different question
   styles.
 - **Game engine**: [game.js](game.js) randomly assigns each fact a question type every round —

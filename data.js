@@ -1,4 +1,5 @@
-/* Question bank extracted from "Reviewer for PCTG" (Region 2: Cagayan Valley, Region 3: Central Luzon).
+/* Question bank extracted from "Reviewer for PCTG" (Region 1: Ilocos Region, Region 2: Cagayan
+   Valley, Region 3: Central Luzon).
    Each fact has pre/post text that surrounds the answer, so the engine can:
    - build a True/False statement (swap answer with a distractor)
    - build a Fill-in-the-blank statement (mask the answer)
@@ -6,10 +7,10 @@
 */
 
 const POOLS = {
-  capitals: ["Basco", "Tuguegarao City", "City of Ilagan", "Bayombong", "Cabarroguis", "Baler", "Balanga City", "Malolos City", "Palayan City", "City of San Fernando", "Tarlac City", "Iba"],
-  provinces: ["Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino", "Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales"],
+  capitals: ["Basco", "Tuguegarao City", "City of Ilagan", "Bayombong", "Cabarroguis", "Baler", "Balanga City", "Malolos City", "Palayan City", "City of San Fernando", "Tarlac City", "Iba", "Laoag City", "Vigan City", "San Fernando City (La Union)", "Lingayen"],
+  provinces: ["Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino", "Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales", "Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan"],
   landmarks: ["Mahatao Church", "Marlboro Hills", "Sabtang Island", "Callao Cave", "Anguib Beach", "Our Lady of Piat", "St. Peter Cathedral", "Palanan", "Magat Dam", "Tumauini Church", "Ilagan Sanctuary", "Mt. Pulag", "Capisaan Cave", "Lower Magat Eco-Park", "Aglipay Caves", "Landingan Viewpoint", "Siitan River", "Sabang Beach", "Dicasalarin Cove", "Millennium Balete Tree", "Mt. Samat Cross", "Las Casas Filipinas de Acuzar", "Pawikan Center", "Barasoain Church", "Biak-na-Bato", "Minalungao Park", "Pantabangan Dam", "Mt. Arayat", "Betis Church", "Monasterio de Tarlac", "Anawangin Cove", "Nagsasa Cove", "Silanguin Coves"],
-  festivals: ["Palu-Palu", "Kulay", "Sinabalu Festival", "Bambanti Festival", "Ammungan Festival", "Ginamaluan Festival", "Coco-Sabutan Festival", "Siege of Baler", "Pawikan Festival", "Obando Fertility Rites", "Taong Putik Festival", "Giant Lantern Festival", "Cutud Lenten Rites", "Malatarlac Festival", "Dinamulag Mango Festival"],
+  festivals: ["Palu-Palu", "Kulay", "Sinabalu Festival", "Bambanti Festival", "Ammungan Festival", "Ginamaluan Festival", "Coco-Sabutan Festival", "Siege of Baler", "Pawikan Festival", "Obando Fertility Rites", "Taong Putik Festival", "Giant Lantern Festival", "Cutud Lenten Rites", "Malatarlac Festival", "Dinamulag Mango Festival", "Pamulinawen Festival", "Longganisa Festival", "Dinengdeng Festival", "Bangus Festival"],
   languages: ["Ivatan", "Ibanag", "Gaddang & Yogad", "Isinai", "Bugkalot/Agta", "Ilocano", "Kapampangan", "Sambal", "Tagalog"],
 };
 
@@ -136,4 +137,59 @@ const FACTS = [
   { id: "tv-tapulaoheight", poolKey: "custom", q: "What is the elevation of Mt. Tapulao in Zambales?", pre: "Mt. Tapulao in Zambales stands at ", post: ".", answer: "2,037 meters", wrongOptions: ["1,845 meters", "2,928 meters", "1,200 meters"] },
   { id: "tv-mango", poolKey: "custom", q: "What mango variety from Zambales holds a Guinness World Record for sweetest mango?", pre: "The ", post: " mango variety from Zambales holds a Guinness World Record for sweetest mango.", answer: "Dinamulag", wrongOptions: ["Carabao", "Pico", "Indian"] },
   { id: "tv-ricegranary", poolKey: "custom", q: '"Rice Granary of the Philippines" is the nickname of which region?', pre: "", post: ' is known as the "Rice Granary of the Philippines."', answer: "Central Luzon (Region 3)", wrongOptions: ["Cagayan Valley (Region 2)", "Western Visayas", "Ilocos Region"], noFill: true },
+
+  // ================= REGION 1: ILOCOS REGION =================
+
+  // ---------------- CAPITALS ----------------
+  { id: "cap-ilocosnorte", poolKey: "capitals", q: "What is the capital of Ilocos Norte?", pre: "The capital of Ilocos Norte is ", post: ".", answer: "Laoag City" },
+  { id: "cap-ilocossur", poolKey: "capitals", q: "What is the capital of Ilocos Sur?", pre: "The capital of Ilocos Sur is ", post: ".", answer: "Vigan City" },
+  { id: "cap-launion", poolKey: "capitals", q: "What is the capital of La Union?", pre: "The capital of La Union is ", post: ".", answer: "San Fernando City (La Union)" },
+  { id: "cap-pangasinan", poolKey: "capitals", q: "What is the capital of Pangasinan?", pre: "The capital of Pangasinan is ", post: ".", answer: "Lingayen" },
+
+  // ---------------- NICKNAMES ----------------
+  { id: "nick-ilocosnorte", poolKey: "provinces", q: 'Which province is nicknamed "Home of Great Leaders" and "City of My Dreams" (for its capital)?', pre: 'The province nicknamed "Home of Great Leaders" / "City of My Dreams" is ', post: ".", answer: "Ilocos Norte" },
+  { id: "nick-ilocossur", poolKey: "provinces", q: 'Which province is nicknamed "The Heritage of the Philippines"?', pre: 'The province nicknamed "The Heritage of the Philippines" is ', post: ".", answer: "Ilocos Sur" },
+  { id: "nick-launion", poolKey: "provinces", q: 'Which province is nicknamed the "Garden Coast"?', pre: 'The province nicknamed the "Garden Coast" is ', post: ".", answer: "La Union" },
+  { id: "nick-pangasinan", poolKey: "provinces", q: 'Which province is nicknamed the "Most Romantic Place in the Philippines"?', pre: 'The province nicknamed the "Most Romantic Place in the Philippines" is ', post: ".", answer: "Pangasinan" },
+
+  // ---------------- TOURIST ATTRACTIONS (province) ----------------
+  { id: "attr-pagudpud", poolKey: "provinces", q: "Pagudpud Beach is a major tourist attraction in which province?", pre: "Pagudpud Beach is a major tourist attraction in ", post: ".", answer: "Ilocos Norte" },
+  { id: "attr-paoay", poolKey: "provinces", q: "The San Agustin Church of Paoay is located in which province?", pre: "The San Agustin Church of Paoay is located in ", post: ".", answer: "Ilocos Norte" },
+  { id: "attr-patapat", poolKey: "provinces", q: "The Patapat Viaduct is a major tourist attraction in which province?", pre: "The Patapat Viaduct is a major tourist attraction in ", post: ".", answer: "Ilocos Norte" },
+  { id: "attr-callecrisologo", poolKey: "provinces", q: "Calle Crisologo is a major tourist attraction in which province?", pre: "Calle Crisologo is a major tourist attraction in ", post: ".", answer: "Ilocos Sur" },
+  { id: "attr-bantay", poolKey: "provinces", q: "The Bantay Church Bell Tower is located in which province?", pre: "The Bantay Church Bell Tower is located in ", post: ".", answer: "Ilocos Sur" },
+  { id: "attr-vigancathedral", poolKey: "provinces", q: "Vigan Cathedral is a major tourist attraction in which province?", pre: "Vigan Cathedral is a major tourist attraction in ", post: ".", answer: "Ilocos Sur" },
+  { id: "attr-baluarte", poolKey: "provinces", q: "The Baluarte Watch Tower is a major tourist attraction in which province?", pre: "The Baluarte Watch Tower is a major tourist attraction in ", post: ".", answer: "La Union" },
+  { id: "attr-machotemple", poolKey: "provinces", q: "The Ma-Cho Temple is a major tourist attraction in which province?", pre: "The Ma-Cho Temple is a major tourist attraction in ", post: ".", answer: "La Union" },
+  { id: "attr-christredeemer", poolKey: "provinces", q: "The Christ Redeemer Statue is a major tourist attraction in which province?", pre: "The Christ Redeemer Statue is a major tourist attraction in ", post: ".", answer: "La Union" },
+  { id: "attr-hundredislands", poolKey: "provinces", q: "The Hundred Islands is a major tourist attraction in which province?", pre: "The Hundred Islands is a major tourist attraction in ", post: ".", answer: "Pangasinan" },
+  { id: "attr-skyplaza", poolKey: "provinces", q: "Sky Plaza is a major tourist attraction in which province?", pre: "Sky Plaza is a major tourist attraction in ", post: ".", answer: "Pangasinan" },
+  { id: "attr-patarbeach", poolKey: "provinces", q: "Patar Beach Resort is a major tourist attraction in which province?", pre: "Patar Beach Resort is a major tourist attraction in ", post: ".", answer: "Pangasinan" },
+
+  // ---------------- ACTIVITIES (province) ----------------
+  { id: "act-dingras", poolKey: "provinces", q: "In which province can you take a hike in Dingras?", pre: "Taking a hike in Dingras is a major activity in ", post: ".", answer: "Ilocos Norte" },
+  { id: "act-bojeador", poolKey: "provinces", q: "In which province can you climb up to Cape Bojeador Lighthouse?", pre: "Climbing up to Cape Bojeador Lighthouse is a major activity in ", post: ".", answer: "Ilocos Norte" },
+  { id: "act-sandboard", poolKey: "provinces", q: "In which province can you go sand boarding and ride a 4x4 at the sand dunes?", pre: "Sand boarding and 4x4 riding at the sand dunes is a major activity in ", post: ".", answer: "Ilocos Norte" },
+  { id: "act-bantaytower", poolKey: "provinces", q: "In which province can you climb the winding staircase of the Bantay Bell Tower?", pre: "Climbing the winding staircase of the Bantay Bell Tower is a major activity in ", post: ".", answer: "Ilocos Sur" },
+  { id: "act-empanada", poolKey: "provinces", q: "In which province is trying the famous Empanada a major activity?", pre: "Taking a bite of the famous Empanada is a major activity in ", post: ".", answer: "Ilocos Sur" },
+  { id: "act-antiques", poolKey: "provinces", q: "In which province can you hunt for antiques and furniture as a major activity?", pre: "Hunting for antiques and furniture is a major activity in ", post: ".", answer: "Ilocos Sur" },
+  { id: "act-beachchill", poolKey: "provinces", q: "In which province is chilling out at the beach listed as a major activity?", pre: "Chilling out at the beach is a major activity in ", post: ".", answer: "La Union" },
+  { id: "act-surfing", poolKey: "provinces", q: "Surfing is a major activity in which province?", pre: "Surfing is a major activity in ", post: ".", answer: "La Union" },
+  { id: "act-cliffjump", poolKey: "provinces", q: "Cliff-jumping is a major activity in which province?", pre: "Cliff-jumping is a major activity in ", post: ".", answer: "La Union" },
+  { id: "act-islandhop", poolKey: "provinces", q: "Island hopping in the Hundred Islands is a major activity in which province?", pre: "Island hopping in the Hundred Islands is a major activity in ", post: ".", answer: "Pangasinan" },
+  { id: "act-zipline", poolKey: "provinces", q: "Zip-lining over the water in Virgin Islands is a major activity in which province?", pre: "Zip-lining over the water in Virgin Islands is a major activity in ", post: ".", answer: "Pangasinan" },
+  { id: "act-enchantedcave", poolKey: "provinces", q: "Exploring the Enchanted Cave in Bolinao is a major activity in which province?", pre: "Exploring the Enchanted Cave in Bolinao is a major activity in ", post: ".", answer: "Pangasinan" },
+
+  // ---------------- FESTIVALS ----------------
+  { id: "fest-pamulinawen", poolKey: "festivals", q: "What is the major festival of Ilocos Norte called?", pre: "The major festival of Ilocos Norte is the ", post: ".", answer: "Pamulinawen Festival" },
+  { id: "fest-longganisa", poolKey: "festivals", q: "What is the major festival of Ilocos Sur called?", pre: "The major festival of Ilocos Sur is the ", post: ".", answer: "Longganisa Festival" },
+  { id: "fest-dinengdeng", poolKey: "festivals", q: "What is the major festival of La Union called?", pre: "The major festival of La Union is the ", post: ".", answer: "Dinengdeng Festival" },
+  { id: "fest-bangus", poolKey: "festivals", q: "What is the major festival of Pangasinan called?", pre: "The major festival of Pangasinan is the ", post: ".", answer: "Bangus Festival" },
+
+  // ---------------- REGION 1 OVERVIEW TRIVIA ----------------
+  { id: "tv-ilocosname", poolKey: "custom", q: "Region 1 is also known as which region?", pre: "Region 1 is also known as the ", post: ".", answer: "Ilocos Region", wrongOptions: ["Cagayan Valley", "Central Luzon", "Cordillera Administrative Region"] },
+  { id: "tv-ilocosprovcount", poolKey: "custom", q: "How many provinces make up the Ilocos Region (Region 1)?", pre: "The Ilocos Region (Region 1) is composed of ", post: " provinces.", answer: "4", wrongOptions: ["3", "5", "6"] },
+  { id: "tv-ilocossea", poolKey: "custom", q: "Which body of water lies to the west of the Ilocos Region?", pre: "The body of water to the west of the Ilocos Region is the ", post: ".", answer: "South China Sea", wrongOptions: ["Pacific Ocean", "Sulu Sea", "Philippine Sea"] },
+  { id: "tv-ilocossouth", poolKey: "custom", q: "Which region borders the Ilocos Region to the south?", pre: "The region bordering the Ilocos Region to the south is ", post: ".", answer: "Central Luzon", wrongOptions: ["Cagayan Valley", "CALABARZON", "Cordillera Administrative Region"] },
+  { id: "tv-ilocoseast", poolKey: "custom", q: "Which two regions border the Ilocos Region to the east?", pre: "The regions bordering the Ilocos Region to the east are the ", post: ".", answer: "Cordillera Administrative Region and Cagayan Valley", wrongOptions: ["Central Luzon and CALABARZON", "Cagayan Valley and Central Luzon", "Bicol Region and Cagayan Valley"], noFill: true },
 ];
