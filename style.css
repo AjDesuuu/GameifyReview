@@ -1,0 +1,405 @@
+:root {
+  --blue: #0038a8;
+  --red: #ce1126;
+  --gold: #fcd116;
+  --bg-top: #0b1e46;
+  --bg-bottom: #163172;
+  --card-bg: #ffffff;
+  --text-dark: #17213b;
+  --text-muted: #5a6480;
+  --green: #1fa855;
+  --radius: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(160deg, var(--bg-top), var(--bg-bottom) 60%, #0a1530);
+  color: var(--text-dark);
+  display: flex;
+  justify-content: center;
+  padding: 0;
+}
+
+#app {
+  width: 100%;
+  max-width: 640px;
+  padding: 20px 16px 40px;
+  position: relative;
+}
+
+#app.shake {
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.app-header {
+  text-align: center;
+  color: #fff;
+  margin-bottom: 18px;
+}
+
+.app-header h1 {
+  margin: 0 0 4px;
+  font-size: 1.7rem;
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  margin: 0;
+  color: #c9d4f5;
+  font-size: 0.9rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.start-card h2 {
+  margin-top: 0;
+  color: var(--blue);
+}
+
+.muted {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.start-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+@media (min-width: 480px) {
+  .start-options {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.start-option {
+  padding: 18px 10px;
+  text-align: center;
+}
+
+.start-option .small {
+  font-weight: 400;
+  font-size: 0.78rem;
+  opacity: 0.85;
+}
+
+/* HUD */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: #fff;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.lives {
+  font-size: 1.3rem;
+  display: flex;
+  gap: 2px;
+}
+
+.heart {
+  transition: transform 0.2s ease;
+}
+
+.heart.lost {
+  filter: grayscale(1) opacity(0.6);
+}
+
+.progress-wrap {
+  flex: 1 1 160px;
+  min-width: 140px;
+}
+
+#progress-text {
+  font-size: 0.8rem;
+  color: #d5deff;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), #ffe680);
+  width: 0%;
+  transition: width 0.35s ease;
+}
+
+.score {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--gold);
+}
+
+/* question card */
+.question-card-wrap {
+  min-height: 260px;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.tag-category {
+  background: rgba(0, 56, 168, 0.12);
+  color: var(--blue);
+}
+
+.tag-type {
+  background: rgba(206, 17, 38, 0.12);
+  color: var(--red);
+}
+
+.question-text {
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0 0 18px;
+  color: var(--text-dark);
+}
+
+.hint-text {
+  font-family: "Courier New", monospace;
+  letter-spacing: 2px;
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: -8px 0 16px;
+}
+
+.choice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 480px) {
+  .choice-grid:not(.tf-grid) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.tf-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.choice-btn {
+  border: 2px solid #e1e6f5;
+  background: #f6f8ff;
+  color: var(--text-dark);
+  padding: 14px 12px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.choice-btn:hover:not(:disabled) {
+  border-color: var(--blue);
+  transform: translateY(-2px);
+}
+
+.choice-btn:disabled {
+  cursor: default;
+}
+
+.choice-btn.correct {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.choice-btn.wrong {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+}
+
+.fill-form {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fill-input {
+  flex: 1 1 180px;
+  padding: 13px 14px;
+  border-radius: 12px;
+  border: 2px solid #e1e6f5;
+  font-size: 0.95rem;
+  background: #f6f8ff;
+}
+
+.fill-input:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+
+.fill-input.wrong-input {
+  border-color: var(--red);
+  background: #ffe9ec;
+}
+
+.submit-btn {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+  flex: 0 0 auto;
+}
+
+.feedback {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.feedback.show {
+  animation: pop 0.25s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.correct-feedback {
+  background: rgba(31, 168, 85, 0.12);
+  color: var(--green);
+}
+
+.wrong-feedback {
+  background: rgba(206, 17, 38, 0.1);
+  color: var(--red);
+}
+
+.next-btn {
+  margin-top: 16px;
+  width: 100%;
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+}
+
+/* end screens */
+.end-card {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.end-card h2 {
+  margin-top: 0;
+  font-size: 1.6rem;
+}
+
+.end-score {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.end-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.secondary-btn {
+  background: #eef1fb;
+  color: var(--blue);
+  border-color: #eef1fb;
+}
+
+#screen-win, #screen-lose {
+  position: relative;
+}
+
+/* confetti */
+.confetti {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.confetti-piece {
+  position: absolute;
+  top: -24px;
+  width: 10px;
+  height: 16px;
+  opacity: 0.95;
+  animation-name: fall;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+  animation-fill-mode: forwards;
+}
+
+@keyframes fall {
+  to {
+    top: 100vh;
+    transform: translateY(0) rotate(540deg);
+    opacity: 0.4;
+  }
+}
+
+.app-footer {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  margin-top: 26px;
+}
