@@ -78,9 +78,41 @@ body {
 
 /* ---------------- header ---------------- */
 .app-header {
+  position: relative;
   text-align: center;
   padding: 4px 0 clamp(10px, 2.5vw, 18px);
   flex: 0 0 auto;
+}
+
+.sfx-toggle {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  font-family: var(--font-pixel);
+  font-size: 0.5rem;
+  letter-spacing: 1px;
+  color: var(--ink);
+  background: var(--pink-300);
+  border: 2px solid var(--ink);
+  padding: 5px 7px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 0 var(--pink-600);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.15s ease;
+}
+
+.sfx-toggle:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 0 var(--pink-600);
+}
+
+.sfx-toggle:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 0 var(--pink-600);
+}
+
+.sfx-toggle.sfx-off {
+  background: #b9a7c4;
+  color: var(--ink-soft);
 }
 
 .brand-badge {
@@ -116,7 +148,6 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   padding-top: clamp(10px, 4vh, 48px);
-  min-height: 0;
 }
 
 @media (min-width: 700px) {
@@ -222,6 +253,59 @@ body {
   100% { transform: scale(1) rotate(0deg); filter: none; }
 }
 
+/* ---------------- mode select ---------------- */
+.mode-select {
+  margin-top: 20px;
+}
+
+.mode-select-tag {
+  display: inline-block;
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  letter-spacing: 0.5px;
+  color: var(--ink);
+  background: var(--gold);
+  border: 2px solid var(--ink);
+  padding: 5px 8px;
+  margin-bottom: 8px;
+}
+
+.segmented {
+  display: flex;
+  border: 3px solid var(--ink);
+  box-shadow: 4px 4px 0 0 var(--ink);
+}
+
+.segment {
+  flex: 1;
+  font-family: var(--font-retro);
+  font-size: 1.1rem;
+  padding: 10px 8px;
+  background: var(--pink-50);
+  color: var(--ink);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.segment + .segment {
+  border-left: 3px solid var(--ink);
+}
+
+.segment.active {
+  background: var(--pink-500);
+  color: var(--pink-50);
+}
+
+.segment:hover:not(.active) {
+  background: var(--pink-300);
+}
+
+.mode-hint {
+  margin: 8px 0 0;
+  font-size: 0.95rem;
+}
+
 /* ---------------- start tiles ---------------- */
 .start-options {
   display: grid;
@@ -277,9 +361,20 @@ body {
   font-family: var(--font-retro);
 }
 
+.lives-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .lives {
   display: flex;
   gap: 4px;
+}
+
+.tag-practice {
+  background: var(--gold);
+  color: var(--ink);
 }
 
 .progress-wrap {
@@ -533,6 +628,17 @@ body {
 .lose-title {
   color: var(--red-dark);
   text-shadow: 3px 3px 0 var(--ink);
+}
+
+.end-subtitle {
+  font-size: 1.2rem;
+  color: var(--ink);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .end-score {

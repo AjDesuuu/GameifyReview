@@ -13,6 +13,7 @@
 <div id="app">
 
   <header class="app-header">
+    <button id="sfx-toggle" class="sfx-toggle" type="button" aria-label="Toggle sound effects">SFX <span id="sfx-state">ON</span></button>
     <span class="brand-badge">REGION I&ndash;III</span>
     <h1>PCTG <span class="accent">QUIZ QUEST</span></h1>
   </header>
@@ -34,6 +35,15 @@
         Run out and it's game over &mdash; but you can always retry.
       </p>
 
+      <div class="mode-select">
+        <span class="mode-select-tag">Game Mode</span>
+        <div class="segmented" role="group" aria-label="Game mode">
+          <button class="segment" type="button" data-mode="off">Normal</button>
+          <button class="segment" type="button" data-mode="practice">Practice</button>
+        </div>
+        <p class="muted mode-hint" id="mode-hint"></p>
+      </div>
+
       <div class="start-options">
         <button class="pixel-tile" data-start="10">
           <span class="tile-num">10</span>
@@ -53,7 +63,10 @@
 
   <section id="screen-game" class="screen hidden">
     <div class="hud">
-      <div id="lives-box" class="lives"></div>
+      <div class="lives-wrap">
+        <div id="lives-box" class="lives"></div>
+        <span id="practice-badge" class="tag tag-practice hidden">Practice</span>
+      </div>
       <div class="progress-wrap">
         <span id="progress-text">Question 1 / 10</span>
         <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
@@ -75,9 +88,10 @@
   <section id="screen-win" class="screen hidden">
     <div id="confetti" class="confetti"></div>
     <div class="card end-card">
-      <h2 class="end-title win-title">Congratulations!</h2>
+      <h2 class="end-title win-title">Congrats baby!</h2>
+      <p class="end-subtitle">You made it! That's my girl<span class="inline-hearts" id="win-heart"></span></p>
       <p id="win-score" class="end-score"></p>
-      <p class="muted">You made it through the round. Play again and the questions will shuffle and change type for extra practice.</p>
+      <p class="muted">Play again and the questions will shuffle and change type for extra practice.</p>
       <div class="end-actions">
         <button id="play-again-btn" class="pixel-btn">Play Again</button>
         <button class="pixel-btn secondary-btn" data-home>Main Menu</button>
@@ -87,7 +101,8 @@
 
   <section id="screen-lose" class="screen hidden">
     <div class="card end-card">
-      <h2 class="end-title lose-title">Out of Lives</h2>
+      <h2 class="end-title lose-title">Aww baby!</h2>
+      <p class="end-subtitle">You can do it! Try an try again!</p>
       <p id="lose-score" class="end-score"></p>
       <p id="lose-progress" class="muted"></p>
       <div class="end-actions">
@@ -103,6 +118,7 @@
 </div>
 
 <script src="data.js"></script>
+<script src="sound.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

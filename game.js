@@ -130,6 +130,7 @@ function buildQuestion(fact) {
 
 /* ---------------- game state ---------------- */
 const LIVES_START = 3;
+let practiceMode = false;
 
 const state = {
   queue: [],
@@ -161,6 +162,7 @@ const els = {
   loseScore: document.getElementById("lose-score"),
   loseProgress: document.getElementById("lose-progress"),
   confetti: document.getElementById("confetti"),
+  practiceBadge: document.getElementById("practice-badge"),
 };
 
 function showScreen(name) {
@@ -180,6 +182,7 @@ function startRound(length) {
   state.index = 0;
   state.lives = LIVES_START;
   state.correctCount = 0;
+  els.practiceBadge.classList.toggle("hidden", !practiceMode);
   showScreen("game");
   renderLives();
   renderQuestion();
@@ -309,10 +312,14 @@ function handleAnswer(isCorrect, btnEl, q, inputEl) {
     if (btnEl) btnEl.classList.add("correct");
     els.feedback.className = "feedback show correct-feedback";
     els.feedback.textContent = "CORRECT!";
+    SFX.correct();
   } else {
-    const lostIndex = state.lives - 1;
-    state.lives--;
-    renderLives(lostIndex);
+    SFX.wrong();
+    if (!practiceMode) {
+      const lostIndex = state.lives - 1;
+      state.lives--;
+      renderLives(lostIndex);
+    }
     if (btnEl) btnEl.classList.add("wrong");
     const answerText = q.correct === true ? "TRUE" : q.correct === false ? "FALSE" : q.correct;
     els.feedback.className = "feedback show wrong-feedback";
@@ -333,6 +340,7 @@ function handleAnswer(isCorrect, btnEl, q, inputEl) {
 }
 
 els.nextBtn.addEventListener("click", () => {
+  SFX.pop();
   state.index++;
   if (state.index >= state.queue.length) {
     endRoundWin();
@@ -345,12 +353,14 @@ function endRoundWin() {
   showScreen("win");
   els.winScore.textContent = `You got ${state.correctCount} / ${state.queue.length} correct with ${state.lives} ${state.lives === 1 ? "life" : "lives"} left!`;
   launchConfetti();
+  SFX.win();
 }
 
 function endRoundLose() {
   showScreen("lose");
   els.loseScore.textContent = `Final score: ${state.correctCount} correct`;
   els.loseProgress.textContent = `You made it to question ${state.index + 1} of ${state.queue.length}.`;
+  SFX.lose();
 }
 
 function launchConfetti() {
@@ -371,15 +381,71 @@ function launchConfetti() {
 /* ---------------- start / retry buttons ---------------- */
 document.querySelectorAll("[data-start]").forEach((btn) => {
   btn.addEventListener("click", () => {
+    SFX.pop();
     const len = btn.getAttribute("data-start");
     startRound(len === "all" ? "all" : parseInt(len, 10));
   });
 });
 
-document.getElementById("play-again-btn").addEventListener("click", () => startRound(state.queue.length));
-document.getElementById("retry-btn").addEventListener("click", () => startRound(state.queue.length));
-document.querySelectorAll("[data-home]").forEach((btn) => btn.addEventListener("click", () => showScreen("start")));
+document.getElementById("play-again-btn").addEventListener("click", () => {
+  SFX.pop();
+  startRound(state.queue.length);
+});
+document.getElementById("retry-btn").addEventListener("click", () => {
+  SFX.pop();
+  startRound(state.queue.length);
+});
+document.querySelectorAll("[data-home]").forEach((btn) =>
+  btn.addEventListener("click", () => {
+    SFX.pop();
+    showScreen("start");
+  })
+);
 
-/* ---------------- intro hearts ---------------- */
+/* ---------------- sound toggle ---------------- */
+const sfxToggleBtn = document.getElementById("sfx-toggle");
+const sfxStateLabel = document.getElementById("sfx-state");
+
+function syncSfxLabel() {
+  const on = SFX.isEnabled();
+  sfxStateLabel.textContent = on ? "ON" : "OFF";
+  sfxToggleBtn.classList.toggle("sfx-off", !on);
+}
+
+sfxToggleBtn.addEventListener("click", () => {
+  SFX.toggle();
+  syncSfxLabel();
+  SFX.pop();
+});
+
+syncSfxLabel();
+
+/* ---------------- game mode ---------------- */
+const modeSegments = document.querySelectorAll(".segment[data-mode]");
+const modeHint = document.getElementById("mode-hint");
+const MODE_HINTS = {
+  off: "Normal: a wrong answer costs a life.",
+  practice: "Practice: wrong answers don't cost a life — just relaxed review.",
+};
+
+function setPracticeMode(on) {
+  practiceMode = on;
+  modeSegments.forEach((seg) => seg.classList.toggle("active", seg.getAttribute("data-mode") === (on ? "practice" : "off")));
+  modeHint.textContent = MODE_HINTS[on ? "practice" : "off"];
+}
+
+modeSegments.forEach((seg) => {
+  seg.addEventListener("click", () => {
+    SFX.pop();
+    setPracticeMode(seg.getAttribute("data-mode") === "practice");
+  });
+});
+
+setPracticeMode(false);
+
+/* ---------------- decorative hearts ---------------- */
 const introHeartsBox = document.getElementById("intro-hearts");
 for (let i = 0; i < LIVES_START; i++) introHeartsBox.appendChild(createPixelHeart(true));
+
+const winHeartBox = document.getElementById("win-heart");
+winHeartBox.appendChild(createPixelHeart(true));
