@@ -2,33 +2,51 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>PCTG Quiz Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <div id="app">
 
   <header class="app-header">
-    <h1>🇵🇭 PCTG Quiz Quest</h1>
-    <p class="subtitle">Cagayan Valley &amp; Central Luzon Reviewer — Gamified</p>
+    <span class="brand-badge">REGION I&ndash;III</span>
+    <h1>PCTG <span class="accent">QUIZ QUEST</span></h1>
   </header>
+
+  <main class="app-main">
 
   <section id="screen-start" class="screen">
     <div class="card start-card">
-      <h2>Ready to test your memory?</h2>
+      <h2>Ready to test<br />your memory?</h2>
       <p class="muted">
-        Answer questions pulled from the PCTG reviewer (Region 2 &amp; Region 3).
-        Each round mixes <strong>Multiple Choice</strong>, <strong>True or False</strong>,
-        and <strong>Fill in the Blank</strong> — the mix reshuffles every time you play,
-        so the same fact might show up differently next round.
+        Questions pulled from the PCTG reviewer &mdash; Ilocos Region, Cagayan Valley, and
+        Central Luzon. Every round mixes <strong>Multiple Choice</strong>,
+        <strong>True or False</strong>, and <strong>Fill in the Blank</strong> &mdash; the mix
+        reshuffles every time you play, so the same fact can show up differently next round.
       </p>
-      <p class="muted">You start with <strong>3 lives ❤️❤️❤️</strong>. Answer wrong and you lose one. Run out and it's game over — but you can always retry!</p>
+      <p class="muted">
+        You start with <strong>3 lives</strong>
+        <span class="inline-hearts" id="intro-hearts"></span>. Answer wrong and you lose one.
+        Run out and it's game over &mdash; but you can always retry.
+      </p>
 
       <div class="start-options">
-        <button class="choice-btn start-option" data-start="10">Quick Round<br /><span class="small">10 questions</span></button>
-        <button class="choice-btn start-option" data-start="20">Standard Round<br /><span class="small">20 questions</span></button>
-        <button class="choice-btn start-option" data-start="all">Full Review<br /><span class="small">All questions</span></button>
+        <button class="pixel-tile" data-start="10">
+          <span class="tile-num">10</span>
+          <span class="tile-label">Quick Round</span>
+        </button>
+        <button class="pixel-tile" data-start="20">
+          <span class="tile-num">20</span>
+          <span class="tile-label">Standard Round</span>
+        </button>
+        <button class="pixel-tile" data-start="all">
+          <span class="tile-num">ALL</span>
+          <span class="tile-label">Full Review</span>
+        </button>
       </div>
     </div>
   </section>
@@ -40,7 +58,7 @@
         <span id="progress-text">Question 1 / 10</span>
         <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
       </div>
-      <div id="score-text" class="score">Score: 0</div>
+      <div id="score-text" class="score">Score 0</div>
     </div>
 
     <div class="card question-card-wrap">
@@ -50,36 +68,38 @@
       </div>
       <div id="question-card"></div>
       <div id="feedback" class="feedback hidden"></div>
-      <button id="next-btn" class="choice-btn next-btn hidden">Next ➜</button>
+      <button id="next-btn" class="pixel-btn next-btn hidden">Next <span class="pixel-arrow"></span></button>
     </div>
   </section>
 
   <section id="screen-win" class="screen hidden">
     <div id="confetti" class="confetti"></div>
     <div class="card end-card">
-      <h2>🎉 Congratulations! 🎉</h2>
+      <h2 class="end-title win-title">Congratulations!</h2>
       <p id="win-score" class="end-score"></p>
-      <p class="muted">You made it through the round! Play again and the questions will shuffle and change type for extra practice.</p>
+      <p class="muted">You made it through the round. Play again and the questions will shuffle and change type for extra practice.</p>
       <div class="end-actions">
-        <button id="play-again-btn" class="choice-btn">Play Again 🔁</button>
-        <button class="choice-btn secondary-btn" data-home>Main Menu</button>
+        <button id="play-again-btn" class="pixel-btn">Play Again</button>
+        <button class="pixel-btn secondary-btn" data-home>Main Menu</button>
       </div>
     </div>
   </section>
 
   <section id="screen-lose" class="screen hidden">
     <div class="card end-card">
-      <h2>💔 Out of Lives!</h2>
+      <h2 class="end-title lose-title">Out of Lives</h2>
       <p id="lose-score" class="end-score"></p>
       <p id="lose-progress" class="muted"></p>
       <div class="end-actions">
-        <button id="retry-btn" class="choice-btn">Retry 🔁</button>
-        <button class="choice-btn secondary-btn" data-home>Main Menu</button>
+        <button id="retry-btn" class="pixel-btn">Retry</button>
+        <button class="pixel-btn secondary-btn" data-home>Main Menu</button>
       </div>
     </div>
   </section>
 
-  <footer class="app-footer">Made for reviewing the PCTG material 📚</footer>
+  </main>
+
+  <footer class="app-footer">Made for reviewing the PCTG material</footer>
 </div>
 
 <script src="data.js"></script>

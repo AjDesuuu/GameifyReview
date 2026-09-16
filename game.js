@@ -34,6 +34,36 @@ function maskAnswer(str) {
     .join(" ");
 }
 
+/* ---------------- pixel heart icon ---------------- */
+const HEART_UNIT = 4;
+const HEART_PATTERN = [
+  [0, 1, 0, 1, 0],
+  [1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1],
+  [0, 1, 1, 1, 0],
+  [0, 0, 1, 0, 0],
+];
+
+function heartBoxShadow(color) {
+  const parts = [];
+  HEART_PATTERN.forEach((row, y) => {
+    row.forEach((v, x) => {
+      if (v) parts.push(`${x * HEART_UNIT}px ${y * HEART_UNIT}px 0 0 ${color}`);
+    });
+  });
+  return parts.join(",");
+}
+
+function createPixelHeart(active) {
+  const wrap = document.createElement("span");
+  wrap.className = "pixel-heart";
+  const dot = document.createElement("span");
+  dot.className = "pixel-heart-dot";
+  dot.style.boxShadow = heartBoxShadow(active ? "var(--heart-on)" : "var(--heart-off)");
+  wrap.appendChild(dot);
+  return wrap;
+}
+
 function factCategoryLabel(fact) {
   if (fact.id.startsWith("cap-")) return "Capitals";
   if (fact.id.startsWith("nick-")) return "Nicknames";
@@ -135,7 +165,11 @@ const els = {
 
 function showScreen(name) {
   Object.values(screens).forEach((s) => s.classList.add("hidden"));
-  screens[name].classList.remove("hidden");
+  const target = screens[name];
+  target.classList.remove("hidden");
+  target.classList.remove("anim-in");
+  void target.offsetWidth; // force reflow so the entrance animation replays
+  target.classList.add("anim-in");
 }
 
 /* ---------------- round control ---------------- */
@@ -151,13 +185,12 @@ function startRound(length) {
   renderQuestion();
 }
 
-function renderLives() {
+function renderLives(animateLostIndex) {
   els.livesBox.innerHTML = "";
   for (let i = 0; i < LIVES_START; i++) {
-    const span = document.createElement("span");
-    span.className = "heart" + (i < state.lives ? "" : " lost");
-    span.textContent = i < state.lives ? "❤️" : "🖤";
-    els.livesBox.appendChild(span);
+    const heart = createPixelHeart(i < state.lives);
+    if (i === animateLostIndex) heart.classList.add("breaking");
+    els.livesBox.appendChild(heart);
   }
 }
 
@@ -165,7 +198,7 @@ function updateHud() {
   const total = state.queue.length;
   els.progressText.textContent = `Question ${state.index + 1} / ${total}`;
   els.progressFill.style.width = `${(state.index / total) * 100}%`;
-  els.scoreText.textContent = `Score: ${state.correctCount}`;
+  els.scoreText.textContent = `Score ${state.correctCount}`;
 }
 
 function typeLabel(t) {
@@ -214,8 +247,8 @@ function renderQuestion() {
     const grid = document.createElement("div");
     grid.className = "choice-grid tf-grid";
     [
-      { label: "✅ True", val: true },
-      { label: "❌ False", val: false },
+      { label: "TRUE", val: true },
+      { label: "FALSE", val: false },
     ].forEach((opt) => {
       const btn = document.createElement("button");
       btn.className = "choice-btn tf-btn";
@@ -275,14 +308,15 @@ function handleAnswer(isCorrect, btnEl, q, inputEl) {
     state.correctCount++;
     if (btnEl) btnEl.classList.add("correct");
     els.feedback.className = "feedback show correct-feedback";
-    els.feedback.textContent = "✅ Correct!";
+    els.feedback.textContent = "CORRECT!";
   } else {
+    const lostIndex = state.lives - 1;
     state.lives--;
-    renderLives();
+    renderLives(lostIndex);
     if (btnEl) btnEl.classList.add("wrong");
-    const answerText = q.correct === true ? "True" : q.correct === false ? "False" : q.correct;
+    const answerText = q.correct === true ? "TRUE" : q.correct === false ? "FALSE" : q.correct;
     els.feedback.className = "feedback show wrong-feedback";
-    els.feedback.textContent = `❌ Not quite. Correct answer: ${answerText}`;
+    els.feedback.textContent = `WRONG — correct answer: ${answerText}`;
     if (inputEl) inputEl.classList.add("wrong-input");
     document.getElementById("app").classList.add("shake");
     setTimeout(() => document.getElementById("app").classList.remove("shake"), 350);
@@ -321,7 +355,7 @@ function endRoundLose() {
 
 function launchConfetti() {
   els.confetti.innerHTML = "";
-  const colors = ["#0038A8", "#CE1126", "#FCD116", "#ffffff"];
+  const colors = ["#ff2f92", "#ff9fd0", "#ffcf4d", "#fff6fb", "#d81b7a"];
   for (let i = 0; i < 60; i++) {
     const piece = document.createElement("span");
     piece.className = "confetti-piece";
@@ -345,3 +379,7 @@ document.querySelectorAll("[data-start]").forEach((btn) => {
 document.getElementById("play-again-btn").addEventListener("click", () => startRound(state.queue.length));
 document.getElementById("retry-btn").addEventListener("click", () => startRound(state.queue.length));
 document.querySelectorAll("[data-home]").forEach((btn) => btn.addEventListener("click", () => showScreen("start")));
+
+/* ---------------- intro hearts ---------------- */
+const introHeartsBox = document.getElementById("intro-hearts");
+for (let i = 0; i < LIVES_START; i++) introHeartsBox.appendChild(createPixelHeart(true));
