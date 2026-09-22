@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>PCTG Quiz Quest</title>
+<title>Reviewer Quiz Quest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
@@ -14,8 +14,8 @@
 
   <header class="app-header">
     <button id="sfx-toggle" class="sfx-toggle" type="button" aria-label="Toggle sound effects">SFX <span id="sfx-state">ON</span></button>
-    <span class="brand-badge">REGION I&ndash;III</span>
-    <h1>PCTG <span class="accent">QUIZ QUEST</span></h1>
+    <span class="brand-badge" id="subject-badge">REVIEWER</span>
+    <h1><span id="subject-title-prefix">REVIEWER</span> <span class="accent">QUIZ QUEST</span></h1>
   </header>
 
   <main class="app-main">
@@ -23,17 +23,25 @@
   <section id="screen-start" class="screen">
     <div class="card start-card">
       <h2>Ready to test<br />your memory?</h2>
+      <p class="muted" id="subject-description">
+        Pick a subject below to load its questions.
+      </p>
       <p class="muted">
-        Questions pulled from the PCTG reviewer &mdash; Ilocos Region, Cagayan Valley, and
-        Central Luzon. Every round mixes <strong>Multiple Choice</strong>,
-        <strong>True or False</strong>, and <strong>Fill in the Blank</strong> &mdash; the mix
-        reshuffles every time you play, so the same fact can show up differently next round.
+        Every round mixes <strong>Multiple Choice</strong>, <strong>True or False</strong>, and
+        <strong>Fill in the Blank</strong> &mdash; the mix reshuffles every time you play, so the
+        same fact can show up differently next round.
       </p>
       <p class="muted">
         You start with <strong>3 lives</strong>
         <span class="inline-hearts" id="intro-hearts"></span>. Answer wrong and you lose one.
         Run out and it's game over &mdash; but you can always retry.
       </p>
+
+      <div class="mode-select">
+        <span class="mode-select-tag">Subject</span>
+        <div class="segmented" id="subject-segmented" role="group" aria-label="Subject"></div>
+        <p class="muted mode-hint" id="subject-hint"></p>
+      </div>
 
       <div class="mode-select">
         <span class="mode-select-tag">Game Mode</span>
@@ -114,10 +122,13 @@
 
   </main>
 
-  <footer class="app-footer">Made for reviewing the PCTG material</footer>
+  <footer class="app-footer">Made for reviewing your PCTG, MPTH &amp; NSTP materials</footer>
 </div>
 
-<script src="data.js"></script>
+<script src="data/core.js"></script>
+<script src="data/pctg.js"></script>
+<script src="data/mpth.js"></script>
+<script src="data/nstp.js"></script>
 <script src="sound.js"></script>
 <script src="game.js"></script>
 </body>

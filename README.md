@@ -1,21 +1,25 @@
-# PCTG Quiz Quest
+# Reviewer Quiz Quest
 
-A static, gamified quiz for reviewing the PCTG reviewer material (Region 1: Ilocos Region,
-Region 2: Cagayan Valley & Region 3: Central Luzon — provinces, capitals, landmarks, tourist
-spots, activities, festivals, languages, trivia).
+A static, gamified quiz for reviewing course material across multiple subjects — currently
+**MPTH** (Tourism & Hospitality), **NSTP** (National Service Training Program), and **PCTG**
+(Region I–III reviewer: provinces, capitals, landmarks, tourist spots, activities, festivals,
+languages, trivia).
 
 No backend/database — everything (questions + game logic) runs client-side in plain
 HTML/CSS/JS, so it deploys as a static site.
 
 ## How it works
 
-- **Question bank**: [data.js](data.js) holds ~150 facts pulled from the reviewer, each with
-  a `pre`/`answer`/`post` shape so the engine can turn one fact into three different question
-  styles.
-- **Game engine**: [game.js](game.js) randomly assigns each fact a question type every round —
-  **Multiple Choice**, **True/False**, or **Fill in the Blank** — and picks a random subset of
-  facts. That's why the same fact (e.g. a Taguig-style true/false question) can show up as
-  multiple choice next time you play.
+- **Subjects**: each subject lives in its own file under [data/](data/) (`data/mpth.js`,
+  `data/nstp.js`, `data/pctg.js`), which calls `registerSubject()` (defined in
+  [data/core.js](data/core.js)) with its label, badge, subtitle, distractor pools, and facts.
+  `SUBJECT_ORDER` in `data/core.js` controls the order subjects appear on the start screen.
+- **Question bank**: each subject's facts are `pre`/`answer`/`post` shaped so the engine can
+  turn one fact into three different question styles.
+- **Game engine**: [game.js](game.js) reads the selected subject's facts, randomly assigns each
+  one a question type every round — **Multiple Choice**, **True/False**, or **Fill in the
+  Blank** — and picks a random subset. That's why the same fact can show up as multiple choice
+  next time you play. The chosen subject is remembered in `localStorage` between visits.
 - **Lives**: 3 hearts. Wrong answer = -1 heart. Hit 0 and it's game over, with a **Retry**
   button that reshuffles a brand new round.
 - **Congratulations screen**: shown with confetti whenever you clear a round with lives to
@@ -49,7 +53,20 @@ Follow the login prompt, and when asked for the project, link it to the existing
 
 ## Adding more questions later
 
-If you add more regions from the reviewer, add more entries to the `FACTS` array in
-[data.js](data.js) following the existing `{ id, poolKey, q, pre, post, answer }` shape (and
-`wrongOptions` for `poolKey: "custom"` items). No other code changes are needed — new facts
+To add more facts to an existing subject, add entries to that subject's `FACTS` array in its
+`data/<subject>.js` file, following the shape `{ id, poolKey, category, q, pre, post, answer }`
+(plus `wrongOptions` for `poolKey: "custom"` items, and `noFill: true` if the answer is too long
+or awkward for the fill-in-the-blank style). No other code changes are needed — new facts
 automatically get shuffled into rounds and get random question types.
+
+## Adding a new subject
+
+1. Copy `data/mpth.js` as a starting template and save it as `data/<id>.js`.
+2. Fill in its `POOLS` (named distractor lists, referenced by a fact's `poolKey`) and `FACTS`
+   array, then call `registerSubject({ id, label, badge, subtitle, pools, facts })` at the
+   bottom — `id` is a short lowercase key (e.g. `"math"`), `label`/`badge` show in the header,
+   `subtitle` is the start-screen description.
+3. Add `<script src="data/<id>.js"></script>` in [index.html](index.html), after
+   `data/core.js` and before `sound.js`.
+4. Add the new `id` to `SUBJECT_ORDER` in [data/core.js](data/core.js) to control where it
+   appears in the subject picker.

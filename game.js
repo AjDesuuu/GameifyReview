@@ -65,16 +65,8 @@ function createPixelHeart(active) {
 }
 
 function factCategoryLabel(fact) {
-  if (fact.id.startsWith("cap-")) return "Capitals";
-  if (fact.id.startsWith("nick-")) return "Nicknames";
-  if (fact.id.startsWith("origin-")) return "Name Origins";
-  if (fact.id.startsWith("lm-")) return "Landmarks";
-  if (fact.id.startsWith("fest-")) return "Festivals";
-  if (fact.id.startsWith("lang-")) return "Language";
-  if (fact.id.startsWith("attr-")) return "Tourist Spots";
-  if (fact.id.startsWith("act-")) return "Activities";
-  if (fact.id.startsWith("tv-")) return "Trivia";
-  return "General";
+  if (activeSubject.categoryFn) return activeSubject.categoryFn(fact);
+  return fact.category || "General";
 }
 
 /* ---------------- question generation ---------------- */
@@ -83,7 +75,7 @@ function getDistractors(fact, count) {
   if (fact.poolKey === "custom") {
     pool = fact.wrongOptions.slice();
   } else {
-    pool = POOLS[fact.poolKey].filter((x) => x !== fact.answer);
+    pool = activeSubject.pools[fact.poolKey].filter((x) => x !== fact.answer);
   }
   return shuffle(pool).slice(0, count);
 }
@@ -131,6 +123,7 @@ function buildQuestion(fact) {
 /* ---------------- game state ---------------- */
 const LIVES_START = 3;
 let practiceMode = false;
+let activeSubject = null;
 
 const state = {
   queue: [],
@@ -176,7 +169,7 @@ function showScreen(name) {
 
 /* ---------------- round control ---------------- */
 function startRound(length) {
-  const pool = shuffle(FACTS);
+  const pool = shuffle(activeSubject.facts);
   const n = length === "all" ? pool.length : Math.min(length, pool.length);
   state.queue = pool.slice(0, n).map(buildQuestion);
   state.index = 0;
@@ -419,6 +412,66 @@ sfxToggleBtn.addEventListener("click", () => {
 });
 
 syncSfxLabel();
+
+/* ---------------- subject select ---------------- */
+const SUBJECT_STORAGE_KEY = "quizQuestSubject";
+const subjectSegmentedBox = document.getElementById("subject-segmented");
+const subjectHint = document.getElementById("subject-hint");
+const subjectBadge = document.getElementById("subject-badge");
+const subjectTitlePrefix = document.getElementById("subject-title-prefix");
+const subjectDescription = document.getElementById("subject-description");
+
+function loadStoredSubject() {
+  try {
+    return localStorage.getItem(SUBJECT_STORAGE_KEY);
+  } catch (e) {
+    return null;
+  }
+}
+
+function storeSubject(id) {
+  try {
+    localStorage.setItem(SUBJECT_STORAGE_KEY, id);
+  } catch (e) {
+    /* ignore (private mode / storage disabled) */
+  }
+}
+
+function setActiveSubject(id) {
+  const subject = SUBJECTS[id];
+  if (!subject) return;
+  activeSubject = subject;
+  storeSubject(id);
+  subjectSegmentedBox.querySelectorAll(".segment").forEach((seg) => {
+    seg.classList.toggle("active", seg.getAttribute("data-subject") === id);
+  });
+  subjectBadge.textContent = subject.badge;
+  subjectTitlePrefix.textContent = subject.label;
+  subjectDescription.textContent = subject.subtitle;
+  subjectHint.textContent = `${subject.facts.length} facts loaded — the mix reshuffles every round.`;
+}
+
+function initSubjectSelector() {
+  SUBJECT_ORDER.forEach((id) => {
+    const subject = SUBJECTS[id];
+    if (!subject) return;
+    const btn = document.createElement("button");
+    btn.className = "segment";
+    btn.type = "button";
+    btn.setAttribute("data-subject", id);
+    btn.textContent = subject.label;
+    btn.addEventListener("click", () => {
+      SFX.pop();
+      setActiveSubject(id);
+    });
+    subjectSegmentedBox.appendChild(btn);
+  });
+  const stored = loadStoredSubject();
+  const initial = stored && SUBJECTS[stored] ? stored : SUBJECT_ORDER[0];
+  setActiveSubject(initial);
+}
+
+initSubjectSelector();
 
 /* ---------------- game mode ---------------- */
 const modeSegments = document.querySelectorAll(".segment[data-mode]");
