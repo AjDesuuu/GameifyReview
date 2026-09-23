@@ -18,6 +18,20 @@ function normalize(s) {
     .replace(/\s+/g, " ");
 }
 
+function compactAnswer(s) {
+  return String(s)
+    .toLowerCase()
+    .replace(/[−–—]/g, "-")
+    .replace(/[\s,{}]/g, "")
+    .replace(/\.$/, "");
+}
+
+function matchesTypedAnswer(input, fact) {
+  const typed = compactAnswer(input);
+  if (!typed) return false;
+  return [fact.answer, ...(fact.accept || [])].some((a) => compactAnswer(a) === typed);
+}
+
 function maskAnswer(str) {
   return str
     .split(" ")
@@ -72,7 +86,7 @@ function factCategoryLabel(fact) {
 /* ---------------- question generation ---------------- */
 function getDistractors(fact, count) {
   let pool;
-  if (fact.poolKey === "custom") {
+  if (!fact.poolKey || fact.poolKey === "custom") {
     pool = fact.wrongOptions.slice();
   } else {
     pool = activeSubject.pools[fact.poolKey].filter((x) => x !== fact.answer);
@@ -81,19 +95,25 @@ function getDistractors(fact, count) {
 }
 
 function pickTypeForFact(fact) {
-  const types = ["mcq", "tf"];
-  if (!fact.noFill) types.push("fill");
+  // Computation facts (those with a worked solution) never become True/False.
+  const types = fact.solution ? ["mcq"] : ["mcq", "tf"];
+  if (!fact.noFill) types.push(fact.solution ? "input" : "fill");
   return types[Math.floor(Math.random() * types.length)];
 }
 
 function buildQuestion(fact) {
   const type = pickTypeForFact(fact);
   const category = factCategoryLabel(fact);
+  const solution = fact.solution || null;
 
   if (type === "mcq") {
     const distractors = getDistractors(fact, 3);
     const choices = shuffle([fact.answer, ...distractors]);
-    return { type: "mcq", factId: fact.id, category, prompt: fact.q, choices, correct: fact.answer };
+    return { type: "mcq", factId: fact.id, category, prompt: fact.q, choices, correct: fact.answer, solution };
+  }
+
+  if (type === "input") {
+    return { type: "input", factId: fact.id, category, prompt: fact.q, correct: fact.answer, fact, solution };
   }
 
   if (type === "tf") {
@@ -201,7 +221,52 @@ function typeLabel(t) {
   if (t === "mcq") return "Multiple Choice";
   if (t === "tf") return "True or False";
   if (t === "fill") return "Fill in the Blank";
+  if (t === "input") return "Solve It";
   return "";
+}
+
+function buildAnswerForm(placeholder, onSubmit) {
+  const form = document.createElement("form");
+  form.className = "fill-form";
+  form.autocomplete = "off";
+  const input = document.createElement("input");
+  input.type = "text";
+  input.className = "fill-input";
+  input.placeholder = placeholder;
+  input.autocomplete = "off";
+  const submit = document.createElement("button");
+  submit.type = "submit";
+  submit.className = "choice-btn submit-btn";
+  submit.textContent = "Submit";
+  form.appendChild(input);
+  form.appendChild(submit);
+  els.questionCard.appendChild(form);
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (state.answered) return;
+    onSubmit(input);
+  });
+
+  setTimeout(() => input.focus(), 50);
+}
+
+function renderSolution(steps) {
+  const box = document.createElement("div");
+  box.className = "solution-box";
+  const title = document.createElement("p");
+  title.className = "solution-title";
+  title.textContent = "HOW TO SOLVE IT";
+  box.appendChild(title);
+  const list = document.createElement("ol");
+  list.className = "solution-steps";
+  steps.forEach((step) => {
+    const li = document.createElement("li");
+    li.textContent = step;
+    list.appendChild(li);
+  });
+  box.appendChild(list);
+  els.feedback.appendChild(box);
 }
 
 function renderQuestion() {
@@ -266,30 +331,20 @@ function renderQuestion() {
     hint.textContent = `Hint: ${q.hint}`;
     els.questionCard.appendChild(hint);
 
-    const form = document.createElement("form");
-    form.className = "fill-form";
-    form.autocomplete = "off";
-    const input = document.createElement("input");
-    input.type = "text";
-    input.className = "fill-input";
-    input.placeholder = "Type your answer…";
-    input.autocomplete = "off";
-    const submit = document.createElement("button");
-    submit.type = "submit";
-    submit.className = "choice-btn submit-btn";
-    submit.textContent = "Submit";
-    form.appendChild(input);
-    form.appendChild(submit);
-    els.questionCard.appendChild(form);
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      if (state.answered) return;
-      const correct = normalize(input.value) === normalize(q.correct);
-      handleAnswer(correct, null, q, input);
+    buildAnswerForm("Type your answer…", (input) => {
+      handleAnswer(normalize(input.value) === normalize(q.correct), null, q, input);
     });
+  }
 
-    setTimeout(() => input.focus(), 50);
+  if (q.type === "input") {
+    const p = document.createElement("p");
+    p.className = "question-text";
+    p.textContent = q.prompt;
+    els.questionCard.appendChild(p);
+
+    buildAnswerForm("Type a number, letter, or word…", (input) => {
+      handleAnswer(matchesTypedAnswer(input.value, q.fact), null, q, input);
+    });
   }
 }
 
@@ -317,6 +372,7 @@ function handleAnswer(isCorrect, btnEl, q, inputEl) {
     const answerText = q.correct === true ? "TRUE" : q.correct === false ? "FALSE" : q.correct;
     els.feedback.className = "feedback show wrong-feedback";
     els.feedback.textContent = `WRONG — correct answer: ${answerText}`;
+    if (q.solution) renderSolution(q.solution);
     if (inputEl) inputEl.classList.add("wrong-input");
     document.getElementById("app").classList.add("shake");
     setTimeout(() => document.getElementById("app").classList.remove("shake"), 350);
@@ -324,7 +380,7 @@ function handleAnswer(isCorrect, btnEl, q, inputEl) {
 
   updateHud();
 
-  if (state.lives <= 0) {
+  if (state.lives <= 0 && !q.solution) {
     setTimeout(endRoundLose, 1100);
     return;
   }
@@ -334,6 +390,10 @@ function handleAnswer(isCorrect, btnEl, q, inputEl) {
 
 els.nextBtn.addEventListener("click", () => {
   SFX.pop();
+  if (state.lives <= 0) {
+    endRoundLose();
+    return;
+  }
   state.index++;
   if (state.index >= state.queue.length) {
     endRoundWin();

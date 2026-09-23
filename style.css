@@ -587,6 +587,28 @@ body {
   color: var(--red-dark);
 }
 
+.solution-box {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--pink-50);
+  border: 2px dashed var(--ink-soft);
+  color: var(--ink);
+}
+
+.solution-title {
+  margin: 0 0 6px;
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  color: var(--pink-600);
+}
+
+.solution-steps {
+  margin: 0;
+  padding-left: 22px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
 .next-btn {
   margin-top: 18px;
   width: 100%;
