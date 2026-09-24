@@ -12,7 +12,7 @@
      legacy id-prefix scheme; new subjects should just set `category` per fact)
    SUBJECT_ORDER controls display order on the start screen. */
 const SUBJECTS = {};
-const SUBJECT_ORDER = ["mpth", "nstp", "pctg", "itts", "mmw"];
+const SUBJECT_ORDER = ["mpth", "nstp", "pctg", "itts", "mmw", "pptc"];
 
 function registerSubject(subject) {
   SUBJECTS[subject.id] = subject;

@@ -27,9 +27,9 @@
         Pick a subject below to load its questions.
       </p>
       <p class="muted">
-        Every round mixes <strong>Multiple Choice</strong>, <strong>True or False</strong>, and
-        <strong>Fill in the Blank</strong> &mdash; the mix reshuffles every time you play, so the
-        same fact can show up differently next round.
+        Every round mixes the question types you turn on below &mdash; <strong>Multiple Choice</strong>,
+        <strong>True or False</strong>, and <strong>Fill in the Blank</strong>. The mix reshuffles
+        every time you play, so the same fact can show up differently next round.
       </p>
       <p class="muted">
         You start with <strong>3 lives</strong>
@@ -41,6 +41,16 @@
         <span class="mode-select-tag">Subject</span>
         <div class="segmented" id="subject-segmented" role="group" aria-label="Subject"></div>
         <p class="muted mode-hint" id="subject-hint"></p>
+      </div>
+
+      <div class="mode-select">
+        <span class="mode-select-tag">Question Types</span>
+        <div class="segmented" role="group" aria-label="Question types">
+          <button class="segment" type="button" data-qtype="mcq" aria-pressed="true">Multiple Choice</button>
+          <button class="segment" type="button" data-qtype="tf" aria-pressed="true">True / False</button>
+          <button class="segment" type="button" data-qtype="fill" aria-pressed="true">Fill / Solve It</button>
+        </div>
+        <p class="muted mode-hint" id="qtype-hint"></p>
       </div>
 
       <div class="mode-select">
@@ -122,7 +132,7 @@
 
   </main>
 
-  <footer class="app-footer">Made for reviewing your PCTG, MPTH, NSTP, ITTS &amp; MMW materials</footer>
+  <footer class="app-footer">Made for reviewing your PCTG, MPTH, NSTP, ITTS, MMW &amp; PPTC materials</footer>
 </div>
 
 <script src="data/core.js"></script>
@@ -131,6 +141,7 @@
 <script src="data/nstp.js"></script>
 <script src="data/itts.js"></script>
 <script src="data/mmw.js"></script>
+<script src="data/pptc.js"></script>
 <script src="sound.js"></script>
 <script src="game.js"></script>
 </body>

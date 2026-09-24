@@ -94,10 +94,18 @@ function getDistractors(fact, count) {
   return shuffle(pool).slice(0, count);
 }
 
-function pickTypeForFact(fact) {
+function possibleTypesForFact(fact) {
   // Computation facts (those with a worked solution) never become True/False.
   const types = fact.solution ? ["mcq"] : ["mcq", "tf"];
   if (!fact.noFill) types.push(fact.solution ? "input" : "fill");
+  return types;
+}
+
+function pickTypeForFact(fact) {
+  const possible = possibleTypesForFact(fact);
+  const allowed = possible.filter((t) => enabledTypes.has(t === "input" ? "fill" : t));
+  // A fact that can't be asked in any enabled type falls back to what it supports.
+  const types = allowed.length ? allowed : possible;
   return types[Math.floor(Math.random() * types.length)];
 }
 
@@ -143,6 +151,9 @@ function buildQuestion(fact) {
 /* ---------------- game state ---------------- */
 const LIVES_START = 3;
 let practiceMode = false;
+const QTYPE_STORAGE_KEY = "quizQuestTypes";
+const ALL_QTYPES = ["mcq", "tf", "fill"];
+let enabledTypes = new Set(ALL_QTYPES);
 let activeSubject = null;
 
 const state = {
@@ -509,6 +520,7 @@ function setActiveSubject(id) {
   subjectTitlePrefix.textContent = subject.label;
   subjectDescription.textContent = subject.subtitle;
   subjectHint.textContent = `${subject.facts.length} facts loaded — the mix reshuffles every round.`;
+  updateQtypeHint();
 }
 
 function initSubjectSelector() {
@@ -555,6 +567,70 @@ modeSegments.forEach((seg) => {
 });
 
 setPracticeMode(false);
+
+/* ---------------- question types ---------------- */
+const qtypeSegments = document.querySelectorAll(".segment[data-qtype]");
+
+function loadStoredTypes() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(QTYPE_STORAGE_KEY));
+    const valid = Array.isArray(saved) ? saved.filter((t) => ALL_QTYPES.includes(t)) : [];
+    if (valid.length) enabledTypes = new Set(valid);
+  } catch (e) {
+    /* ignore (private mode / storage disabled / bad data) */
+  }
+}
+
+function storeTypes() {
+  try {
+    localStorage.setItem(QTYPE_STORAGE_KEY, JSON.stringify([...enabledTypes]));
+  } catch (e) {
+    /* ignore */
+  }
+}
+
+function updateQtypeHint(message) {
+  const hint = document.getElementById("qtype-hint");
+  if (message) {
+    hint.textContent = message;
+    return;
+  }
+  const hasMath = activeSubject && activeSubject.facts.some((f) => f.solution);
+  if (hasMath && enabledTypes.size === 1 && enabledTypes.has("tf")) {
+    hint.textContent = `${activeSubject.label} is computation — it has no True/False, so its questions will use the other types.`;
+  } else {
+    hint.textContent = "Tap to turn a type on or off. At least one must stay on.";
+  }
+}
+
+function syncQtypeSegments() {
+  qtypeSegments.forEach((seg) => {
+    const on = enabledTypes.has(seg.getAttribute("data-qtype"));
+    seg.classList.toggle("active", on);
+    seg.setAttribute("aria-pressed", String(on));
+  });
+}
+
+qtypeSegments.forEach((seg) => {
+  seg.addEventListener("click", () => {
+    const t = seg.getAttribute("data-qtype");
+    if (enabledTypes.has(t) && enabledTypes.size === 1) {
+      SFX.wrong();
+      updateQtypeHint("You need at least one question type on.");
+      return;
+    }
+    SFX.pop();
+    if (enabledTypes.has(t)) enabledTypes.delete(t);
+    else enabledTypes.add(t);
+    storeTypes();
+    syncQtypeSegments();
+    updateQtypeHint();
+  });
+});
+
+loadStoredTypes();
+syncQtypeSegments();
+updateQtypeHint();
 
 /* ---------------- decorative hearts ---------------- */
 const introHeartsBox = document.getElementById("intro-hearts");
